@@ -4,10 +4,7 @@ class Movie < ActiveRecord::Base
   end
 
   def self.with_ratings(ratings)
-    if ratings.nil? || ratings.empty?
-      all
-    else
-      where(rating: ratings)
-    end
+    return all if ratings.blank?
+    where(rating: ratings)
   end
 end

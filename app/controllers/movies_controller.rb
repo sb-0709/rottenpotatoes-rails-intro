@@ -9,8 +9,33 @@ class MoviesController < ApplicationController
   def index
     # @movies = Movie.all
     @all_ratings = Movie.all_ratings
-    @ratings_to_show = params[:ratings]&.keys || @all_ratings
-    @sort_by = params[:sort_by]
+
+    form_submitted = params.key?(:commit) || params.key?(:ratings)
+    if form_submitted
+      if params[:ratings].present?
+        @ratings_to_show = params[:ratings].keys
+        session[:ratings] = params[:ratings] 
+      else
+        @ratings_to_show = @all_ratings
+        session.delete(:ratings)             
+      end
+    elsif session[:ratings]
+      @ratings_to_show = session[:ratings].keys
+    else
+      @ratings_to_show = @all_ratings
+    end
+
+    if params.key?(:sort_by)
+      @sort_by = params[:sort_by].presence
+      session[:sort_by] = @sort_by
+    else
+      @sort_by = session[:sort_by]
+    end
+
+    if !form_submitted && (session[:ratings] || session[:sort_by])
+      redirect_to movies_path(sort_by: session[:sort_by], ratings: session[:ratings]) and return
+    end
+
     @movies = Movie.with_ratings(@ratings_to_show)
     @movies = @movies.order(@sort_by) if @sort_by.present?
   end

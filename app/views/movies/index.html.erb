@@ -9,6 +9,15 @@
       <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
     </div>
   <% end %>
+  <div>
+    <label class="form-label me-2" for="sort_by">Sort by:</label>
+    <%= select_tag :sort_by,
+                   options_for_select([["Title", "title"],
+                                       ["Release date", "release_date"]],
+                                       @sort_by),
+                   id:    "sort_by",
+                   class: "form-select d-inline w-auto" %>
+</div>
   <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
   
 <% end %>
@@ -18,9 +27,17 @@
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th>Movie Title</th>
+      <th class="<%= 'hilite' if @sort_by == 'title' %>">
+        <%= link_to "Movie Title",
+                    movies_path(sort_by: "title",
+                                ratings: @ratings_to_show.map { |r| [r, "1"] }.to_h) %>
+      </th>
       <th>Rating</th>
-      <th>Release Date</th>
+      <th class="<%= 'hilite' if @sort_by == 'release_date' %>">
+        <%= link_to "Release Date",
+                    movies_path(sort_by: "release_date",
+                                ratings: @ratings_to_show.map { |r| [r, "1"] }.to_h) %>
+      </th>
       <th>More Info</th>
     </tr>
   </thead>

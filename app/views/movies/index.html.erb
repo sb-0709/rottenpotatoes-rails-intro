@@ -22,42 +22,31 @@
   
 <% end %>
 
-<%#  Part 1: Start here... %>
-
-<table class="table table-striped col-md-12" id="movies">
-  <thead>
-    <tr>
-      <th class="<%= 'hilite' if @sort_by == 'title' %>">
-        <%= link_to "Movie Title",
-                    movies_path(sort_by: "title",
-                                ratings: @ratings_to_show.map { |r| [r, "1"] }.to_h) %>
-      </th>
-      <th>Rating</th>
-      <th class="<%= 'hilite' if @sort_by == 'release_date' %>">
-        <%= link_to "Release Date",
-                    movies_path(sort_by: "release_date",
-                                ratings: @ratings_to_show.map { |r| [r, "1"] }.to_h) %>
-      </th>
-      <th>More Info</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @movies.each do |movie| %>
-      <tr>
-        <td>
+<div id="movies">
+  <% @movies.each do |movie| %>
+    <div id="<%= dom_id movie %>">
+        <p>
+          <strong>Title:</strong>
           <%= movie.title %>
-        </td>
-        <td>
+        </p>
+
+        <p>
+          <strong>Rating:</strong>
           <%= movie.rating %>
-        </td>
-        <td>
+        </p>
+
+        <p>
+          <strong>Description:</strong>
+          <%= movie.description %>
+        </p>
+
+        <p>
+          <strong>Release date:</strong>
           <%= movie.release_date %>
-        </td>
-        <td>
-          <%= link_to "More about #{movie.title}", movie_path(movie) %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<%= link_to 'Add new movie', new_movie_path, :class => 'btn btn-primary' %>
+        </p>
+      </div>
+      <p><%= link_to "Show this movie", movie %></p>
+  <% end %>
+</div>
+
+<%= link_to 'Add new movie', new_movie_path, class: 'btn btn-primary' %>
